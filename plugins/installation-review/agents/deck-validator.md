@@ -24,11 +24,11 @@ For every bullet and table row:
 For every slide:
 
 5. **Headline follows from the content.** The headline's claim is proven by the slide's own lines.
-6. **Template rules respected.** For example, S07 rows have an owner and ETA (or `TBD`), and S09 lists only items that explicitly request a decision.
+6. **Template rules respected.** Every slide's `rule` in the template holds. For example, in the installation template S07 rows have an owner and ETA (or `TBD`); in the concept template every S08 verdict has a source.
 
 For the executive summary (S02):
 
-7. **Status rule applied correctly.** Re-derive Green / Amber / Red from S04 and S07 using the template's `status_rule` and compare.
+7. **Status rule applied correctly.** Re-derive Green / Amber / Red using the template's `status_rule` and the slides it refers to (S04 and S07 in the installation template, S08 in the concept template), and compare.
 8. **Nothing new.** Each key message appears on the slide it cites.
 
 ## Output

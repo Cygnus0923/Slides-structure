@@ -50,6 +50,20 @@ sources:                                    # optional; overrides template sourc
 
 Assign an owner and a milestone or due date to open issues; S07 and S10 read them.
 
+## Concept-stage repos
+
+Before contract, the concept review template reads these instead of a plan and test reports. Set `review_template: concept-review.yaml` in `project.yaml`.
+
+| File or label | Feeds slide |
+|---|---|
+| `customer/` (brief, requirements, dated file names) | S03 Customer brief |
+| `docs/concept.md` (units, operating cycle) | S05 Proposed concept, S06 How it works |
+| `docs/feasibility.md`: Requirement · Verdict · Why | S08 Feasibility, S09 Tight constraints |
+| `docs/questions.md`, issues labelled `question` | S10 Questions for the customer |
+| `docs/quote.md` (Add · Remove · Re-check, prices) | S12 Quote impact |
+
+Write feasibility verdicts down in the repo. The skill never assigns one, so without that file every verdict goes into the question batch.
+
 ## Review anchors
 
 Each review is saved in `reviews/YYYY-MM-DD/`. Optionally tag the commit as `review/YYYY-MM-DD`. The next review uses the newest of these as its period start, so the "work completed" slide covers exactly the time since the last review.

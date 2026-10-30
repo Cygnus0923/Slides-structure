@@ -29,7 +29,7 @@ For a slide that is `TBD` or has no change, say so plainly: "No scope change thi
 
 - Use exactly the template's `columns`, in order.
 - One row per item. Put the source tag in the last cell.
-- Status cells use: Done, On track, At risk, Late, Blocked.
+- Status cells use: Done, On track, At risk, Late, Blocked, unless the slide's `rule` gives its own values.
 - A cell the repo can't fill and the user skipped holds `TBD`.
 
 ## Source tags
@@ -48,6 +48,6 @@ Write it last. It contains:
 
 1. Overall status (Green / Amber / Red) with one line stating which part of the status rule applied.
 2. Up to three key messages, each an assertion taken from a filled slide, tagged with that slide's id.
-3. The top ask, taken from S09. If S09 has nothing, write "No decisions requested this review".
+3. The top ask, taken from the slide the template's `top_ask` field names. If that slide has nothing, write "No decisions requested this review".
 
 Don't introduce anything here that isn't already on another slide.

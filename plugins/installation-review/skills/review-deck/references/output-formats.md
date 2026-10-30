@@ -52,7 +52,7 @@ Rules the checker enforces:
 - Each slide has `**Headline:**`, `**Layout:**` and `**Status:**` lines. Status is `filled`, `partial` or `tbd`.
 - Every bullet (`- `) and every table body row in the content ends with a `[src: ...]` tag, unless its text is exactly `TBD`.
 - A `tbd` slide contains at least one `TBD` line.
-- Bullets plus table rows do not exceed the slide's `max_bullets`. Group headings inside S05 are written as `**Hardware installation**` lines, not bullets, and don't count.
+- Bullets plus table rows do not exceed the slide's `max_bullets`. Group headings, such as `**Hardware installation**` or `**Add**`, are bold lines, not bullets, and don't count.
 - Everything after `**Notes:**` is speaker notes and is not checked.
 
 ## coverage.md
