@@ -1,0 +1,181 @@
+# Installation project review — fixed slide template
+#
+# This file IS the deck structure. The skill fills it; it never adds, drops,
+# reorders or renames slides. Change the structure here, then bump `version`.
+#
+# Per-slide keys
+#   id, name      Slide identity. The deck must use exactly these, in this order.
+#   layout        Hint for the renderer (title, summary, two-column, table, bullets, gallery).
+#   purpose       What the slide must answer for the reviewer.
+#   fields        What must be on the slide (bullets) or `columns` (table rows).
+#   sources       Where to look first. files = globs from repo root; git / github = queries.
+#   keywords      Fallback terms for a broad search when the hinted sources are empty.
+#   fresh         true  = content must come from the review period; older sources are "stale".
+#                 false = slow-changing content (scope, risks); older sources are fine.
+#   when_missing  ask   = put the gap in the single question batch to the user.
+#                 omit  = leave the slide out (only allowed when optional: true).
+#                 derive = built from other slides, never from the repo directly.
+#   max_bullets   Overrides defaults.max_bullets.
+
+template: installation-review
+version: 1
+
+deck_title: "{project} — Installation review #{review_no}"
+
+defaults:
+  max_bullets: 5
+  when_missing: ask
+  fresh: false
+
+# Directories and files the scanner never opens (large, binary or generated).
+skip:
+  - .git/**
+  - node_modules/**
+  - build/**
+  - install/**
+  - log/**
+  - devel/**
+  - "**/*.bag"
+  - "**/*.mcap"
+  - "**/*.db3"
+  - "**/*.pcd"
+  - "**/*.stl"
+  - "**/*.dae"
+  - "**/*.zip"
+
+slides:
+  - id: S01
+    name: Title
+    layout: title
+    purpose: Identify the project, customer, site and the period under review.
+    fields: [project, customer, site, review_no, review_date, review_period, presenter]
+    sources:
+      files: [project.yaml, README.md]
+    keywords: [customer, site, project]
+    when_missing: ask
+
+  - id: S02
+    name: Executive summary
+    layout: summary
+    purpose: Give the reviewer the answer first — overall status, what changed, what is needed from them.
+    fields:
+      - "overall_status: Green | Amber | Red, applying status_rule"
+      - "key_messages: up to 3 assertions, each drawn from S04–S09"
+      - "top_ask: the single most important decision or support needed (from S09)"
+    status_rule:
+      green: All milestones on track and no open blockers.
+      amber: A milestone slipped by up to 7 days, or an open blocker has both an owner and an ETA.
+      red: A milestone slipped by more than 7 days, or a blocker is missing an owner or an ETA.
+    when_missing: derive
+    max_bullets: 4
+
+  - id: S03
+    name: Scope and configuration
+    layout: two-column
+    purpose: What is being installed, and what changed in the scope or configuration since the last review.
+    fields:
+      - "robot platforms and quantities"
+      - "payloads / sensors"
+      - "network and compute"
+      - "software stack and versions"
+      - "changes since last review (or 'No change')"
+    sources:
+      files: [project.yaml, README.md, docs/scope.md, "docs/bom*", "config/**", "**/package.xml"]
+      git: [diff of the files above across the review period]
+    keywords: [scope, BOM, platform, payload, firmware, version, config]
+    fresh: false
+
+  - id: S04
+    name: Milestones
+    layout: table
+    purpose: Planned versus actual or forecast dates for every milestone.
+    columns: [Milestone, Planned, Actual / forecast, Status]
+    sources:
+      files: [docs/plan.md, docs/milestones.md, project.yaml]
+      github: [milestones with due dates]
+    keywords: [milestone, FAT, SAT, delivery, handover, commissioning, go-live]
+    fresh: true
+    max_bullets: 8
+
+  - id: S05
+    name: Work completed this period
+    layout: bullets
+    purpose: What was actually done in the review period, grouped so reviewers can scan it.
+    fields:
+      - "group under: Hardware installation · Software and integration · Configuration and tuning · Documentation and training"
+      - "one outcome per bullet, not one commit per bullet"
+    sources:
+      git: [commits on the default branch within the review period]
+      github: [PRs merged within the review period, issues closed within the review period]
+      files: ["docs/site-logs/**", "docs/site-visits/**"]
+    keywords: [installed, mounted, deployed, integrated, calibrated, tuned, trained]
+    fresh: true
+    max_bullets: 6
+
+  - id: S06
+    name: Testing and commissioning
+    layout: table
+    purpose: Evidence that the installation works — test runs and their results.
+    columns: [Test, Result, Date, Note]
+    sources:
+      files: ["tests/reports/**", "docs/test*/**", "docs/fat*", "docs/sat*", "docs/acceptance*"]
+      github: [CI runs on the default branch within the review period]
+    keywords: [test, FAT, SAT, acceptance, pass, fail, commissioning, run]
+    fresh: true
+    max_bullets: 8
+
+  - id: S07
+    name: Issues and blockers
+    layout: table
+    purpose: What is stopping or slowing the installation, and who owns each item.
+    columns: [Issue, Impact, Owner, ETA]
+    sources:
+      github: ["open issues labelled blocker, bug or site-issue"]
+      files: [docs/issues.md]
+    keywords: [blocker, blocked, fault, failure, RMA, waiting on]
+    fresh: true
+    rule: Any blocker without an owner or ETA goes into the question batch — never guess them.
+
+  - id: S08
+    name: Risks
+    layout: table
+    purpose: Things that have not gone wrong yet but could affect schedule, cost or acceptance.
+    columns: [Risk, Likelihood, Impact, Mitigation, Owner]
+    sources:
+      files: [docs/risks.md]
+      github: ["open issues labelled risk"]
+    keywords: [risk, concern, lead time, dependency]
+    fresh: false
+
+  - id: S09
+    name: Decisions needed
+    layout: bullets
+    purpose: What the reviewers must decide or approve in this meeting.
+    fields: ["decision, options if any, needed-by date, who asked"]
+    sources:
+      github: ["open issues labelled decision-needed"]
+      files: [docs/decisions.md]
+    fresh: true
+    rule: Only list items that explicitly ask for a decision. Never turn an issue into a decision request yourself.
+
+  - id: S10
+    name: Next steps
+    layout: table
+    purpose: What happens before the next review, with owners and dates.
+    columns: [Action, Owner, Due]
+    sources:
+      files: [docs/plan.md]
+      github: [open issues with an assignee and a milestone or due date, next open milestone]
+    keywords: [next, plan, todo, upcoming]
+    fresh: true
+    max_bullets: 6
+
+  - id: S11
+    name: Appendix
+    layout: gallery
+    purpose: Supporting material — site photos from the period, report links, config diffs.
+    sources:
+      files: ["media/**", "docs/images/**", "tests/reports/**"]
+    optional: true
+    when_missing: omit
+    max_bullets: 8

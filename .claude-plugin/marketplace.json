@@ -1,0 +1,14 @@
+{
+  "name": "weston-robot-review",
+  "description": "Review and reporting tools for Weston Robot installation projects",
+  "owner": {
+    "name": "Weston Robot"
+  },
+  "plugins": [
+    {
+      "name": "installation-review",
+      "source": "./plugins/installation-review",
+      "description": "Fixed-structure installation review decks built from a project repo"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "name": "installation-review",
+  "description": "Builds a fixed-structure project review deck from an installation project's GitHub repo: extracts and condenses, traces every point to its source, and asks only for what the repo can't answer.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Weston Robot"
+  }
+}
