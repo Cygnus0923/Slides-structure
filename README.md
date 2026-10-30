@@ -2,7 +2,7 @@
 
 A Claude Code plugin that turns an installation project's GitHub repo into a project review deck with a **fixed structure**.
 
-- **The template decides the slides.** Same eleven slides, same order, every review.
+- **The template decides the slides.** Same slides, same order, every review of the same kind.
 - **The repo decides the content.** Every bullet is extracted from files, commits, PRs, issues or test reports, and tagged with its source.
 - **You fill only the gaps.** Anything the repo can't answer is asked in one batch. Skipped items stay `TBD` instead of being guessed.
 
@@ -16,7 +16,7 @@ Load fixed template ─► Scan repo ─► Map content to slots ─► Ask user
 
 | Step | What happens | Who |
 |---|---|---|
-| 1. Load template | Reads `templates/installation-review.yaml`: slides, fields, source hints | Skill |
+| 1. Load template | Reads the chosen file in `templates/`: slides, fields, source hints | Skill |
 | 2. Scan repo | Searches hinted files, git history and GitHub per slide | `repo-scanner` agent |
 | 3. Map to slots | Marks each slide found / partial / missing / stale and writes `coverage.md` | Skill |
 | 4. Ask for gaps | One batch of questions, plus overall status to confirm | You |
@@ -25,7 +25,13 @@ Load fixed template ─► Scan repo ─► Map content to slots ─► Ask user
 
 Output goes to `reviews/<YYYY-MM-DD>/deck.md` and `coverage.md` in the project repo. The next review uses that date as its period start.
 
-## The template
+## The templates
+
+Two review types, one YAML each. The skill uses the installation review unless the project's `project.yaml` sets `review_template:`, or you ask for a concept or feasibility review.
+
+### Installation review (default)
+
+For a project being installed: progress against plan.
 
 | # | Slide | Filled from |
 |---|---|---|
@@ -40,6 +46,28 @@ Output goes to `reviews/<YYYY-MM-DD>/deck.md` and `coverage.md` in the project r
 | S09 | Decisions needed | Issues labelled `decision-needed`, `docs/decisions.md` |
 | S10 | Next steps | Plan, assigned open issues, next milestone |
 | S11 | Appendix (optional) | Site photos, report links |
+
+### Concept review
+
+For a project before contract: can we quote it, and what must the customer accept first.
+
+| # | Slide | Filled from |
+|---|---|---|
+| S01 | Title | `project.yaml`, README |
+| S02 | Executive summary | Derived from S05–S13; status from the S08 verdicts |
+| S03 | Customer brief | `customer/`, requirements docs, README |
+| S04 | What changed (optional) | Previous review, concept docs |
+| S05 | Proposed concept | Concept and design docs, BOM |
+| S06 | How it works | Concept docs, README |
+| S07 | Fit check | Design docs, site survey |
+| S08 | Feasibility | `docs/feasibility.md`, issues labelled `feasibility` |
+| S09 | Tight constraints (optional) | Feasibility and design docs |
+| S10 | Questions for the customer | `docs/questions.md`, issues labelled `question` |
+| S11 | Risks | `docs/risks.md`, issues labelled `risk` |
+| S12 | Quote impact | `docs/quote.md`, BOM |
+| S13 | Decisions needed | Issues labelled `decision-needed`, `docs/decisions.md` |
+| S14 | Next steps | Plan, assigned open issues |
+| S15 | Appendix (optional) | Drawings, renders, site photos |
 
 To change the structure, edit the YAML. See [AGENTS.md](AGENTS.md) for the rules.
 
