@@ -1,0 +1,213 @@
+# Concept review — fixed slide template
+#
+# For a project before contract: the customer has a brief, we have a concept,
+# and the review decides whether it can be quoted and what the customer must
+# accept first. Same keys as installation-review.yaml; see that file for what
+# each key means. Change the structure here, then bump `version`.
+
+template: concept-review
+version: 1
+
+deck_title: "{project} — Concept review #{review_no}"
+
+defaults:
+  max_bullets: 5
+  when_missing: ask
+  fresh: false
+
+skip:
+  - .git/**
+  - node_modules/**
+  - build/**
+  - "**/*.bag"
+  - "**/*.mcap"
+  - "**/*.pcd"
+  - "**/*.stl"
+  - "**/*.step"
+  - "**/*.stp"
+  - "**/*.dae"
+  - "**/*.zip"
+
+slides:
+  - id: S01
+    name: Title
+    layout: title
+    purpose: Identify the project, customer, concept revision, and who the deck is for.
+    fields: [project, customer, revision, review_no, review_date, audience, presenter]
+    sources:
+      files: [project.yaml, README.md]
+    keywords: [customer, project, revision, rev]
+    rule: Audience is internal or customer-facing. In a customer-facing deck, nothing the repo marks as internal goes on any slide.
+
+  - id: S02
+    name: Executive summary
+    layout: summary
+    purpose: Answer first — can we quote it, and what must the customer accept before we do.
+    fields:
+      - "overall_status: Green | Amber | Red, applying status_rule"
+      - "key_messages: up to 3 assertions, each drawn from S05–S12"
+      - "top_ask: the single most important decision needed (from S13)"
+    status_rule:
+      green: Every requirement in S08 is OK or Work to price.
+      amber: At least one requirement in S08 is Settle with customer or has no verdict yet, and none is Not feasible.
+      red: At least one requirement in S08 is Not feasible.
+    when_missing: derive
+    max_bullets: 4
+
+  - id: S03
+    name: Customer brief
+    layout: bullets
+    purpose: What the customer asked for, in their own numbers, and where our reading or the site differs.
+    fields:
+      - "each requirement as the customer stated it, with its document and date"
+      - "where our reading differs, say so on the same line"
+      - "out-of-scope or optional items"
+    sources:
+      files: ["customer/**", "docs/brief*", "docs/requirements*", README.md, project.yaml]
+    keywords: [requirement, brief, must, shall, deliverable, scope]
+    rule: Quote the customer's numbers as written. A site measurement that disagrees goes on the same line with its own source.
+    max_bullets: 8
+
+  - id: S04
+    name: What changed
+    layout: table
+    purpose: How this revision differs from the previous concept, and why.
+    columns: [Unit, Previous revision, This revision]
+    sources:
+      files: ["reviews/**/deck.md", "docs/concept*", README.md]
+      git: [diff of the files above across the review period]
+    keywords: [revision, rev, replaced, instead, changed]
+    optional: true
+    when_missing: omit
+    max_bullets: 6
+
+  - id: S05
+    name: Proposed concept
+    layout: two-column
+    purpose: The units in the concept, what each does, and which are bought in versus custom.
+    fields:
+      - "each unit: what it is, what it does, bought-in or custom"
+      - "what is not decided yet"
+    sources:
+      files: ["docs/concept*", "docs/design*", README.md, "docs/bom*"]
+    keywords: [concept, unit, platform, payload, bought-in, custom, design]
+
+  - id: S06
+    name: How it works
+    layout: table
+    purpose: One operating cycle, start to finish, and which unit does each step.
+    columns: [Step, What happens, Unit]
+    sources:
+      files: ["docs/concept*", "docs/operation*", README.md]
+    keywords: [cycle, step, sequence, trigger, dock, return]
+    max_bullets: 8
+
+  - id: S07
+    name: Fit check
+    layout: table
+    purpose: The dimensions and limits that decide whether the concept physically works.
+    columns: [Check, Required, Design or measured, Margin]
+    sources:
+      files: ["docs/design*", "docs/concept*", "docs/survey*", "docs/site*", README.md]
+    keywords: [height, width, clearance, payload, reach, mm, kg]
+    rule: Margin is arithmetic on the two sourced values, with units. If either value is TBD, so is the margin.
+    max_bullets: 6
+
+  - id: S08
+    name: Feasibility
+    layout: table
+    purpose: One verdict per requirement in the brief, so the requote and the customer conversation start from the same list.
+    columns: [Requirement, Verdict, Why]
+    sources:
+      files: ["docs/feasibility*", "docs/concept*", README.md]
+      github: ["open issues labelled feasibility"]
+    keywords: [feasible, verdict, achievable, risk, cannot, depends]
+    rule: >-
+      Every requirement in S03 gets one row, in the same order. Verdict is one of
+      OK, Work to price, Settle with customer, Not feasible. A verdict is an
+      engineering judgment: take it from a source or ask the user. Never assign one.
+    max_bullets: 12
+
+  - id: S09
+    name: Tight constraints
+    layout: table
+    purpose: For each requirement marked Settle with customer, where the budget goes, so reviewers see why it is tight.
+    columns: [Item, Amount, Basis]
+    sources:
+      files: ["docs/feasibility*", "docs/design*", "docs/concept*", README.md]
+    keywords: [budget, cycle time, seconds, total, margin, spec]
+    rule: Every input number has its own source. A total that depends on a TBD input is TBD. Leave the slide out only when S08 has no Settle with customer row.
+    optional: true
+    when_missing: omit
+    max_bullets: 8
+
+  - id: S10
+    name: Questions for the customer
+    layout: table
+    purpose: The answers that change the quote, in order of how much they change it.
+    columns: [Question, Why it matters]
+    sources:
+      files: ["docs/questions*", "docs/clarifications*", README.md]
+      github: ["open issues labelled question"]
+    keywords: [question, clarify, confirm, assumption, unverified]
+    rule: Take questions from the repo or the user; don't write new ones. Keep the source's order if it gives one.
+    max_bullets: 8
+
+  - id: S11
+    name: Risks
+    layout: table
+    purpose: The highest risks to feasibility, cost or schedule, and how each is handled.
+    columns: [Risk, Level, Mitigation, Owner]
+    sources:
+      files: [docs/risks.md, README.md]
+      github: ["open issues labelled risk"]
+    keywords: [risk, concern, lead time, dependency]
+    rule: Highest level first. If there are more than fit, give the count of the rest in the notes.
+    max_bullets: 6
+
+  - id: S12
+    name: Quote impact
+    layout: bullets
+    purpose: What changes in the quote, so sales can requote without re-reading the design.
+    fields:
+      - "group under: Add · Remove · Re-check"
+      - "new total against the previous quote"
+    sources:
+      files: ["docs/quote*", "docs/bom*", "docs/concept*", README.md]
+    keywords: [quote, price, cost, BOM, add, remove]
+    rule: Never estimate a price or a total. A price the repo doesn't give is TBD.
+    max_bullets: 10
+
+  - id: S13
+    name: Decisions needed
+    layout: bullets
+    purpose: What the reviewers must decide in this meeting, including open design choices.
+    fields: ["decision, options if any, needed-by date, who asked"]
+    sources:
+      github: ["open issues labelled decision-needed"]
+      files: [docs/decisions.md, README.md]
+    fresh: true
+    rule: Only list items that explicitly ask for a decision or name an open choice. Never turn a risk or question into a decision yourself.
+
+  - id: S14
+    name: Next steps
+    layout: table
+    purpose: What happens before the next revision, with owners and dates.
+    columns: [Action, Owner, Due]
+    sources:
+      files: [docs/plan.md, README.md]
+      github: [open issues with an assignee]
+    keywords: [next, action, todo, buy, test, requote]
+    fresh: true
+    max_bullets: 6
+
+  - id: S15
+    name: Appendix
+    layout: gallery
+    purpose: Drawings, renders, site photos and supplier specs behind the slides.
+    sources:
+      files: ["design/**", "assets/**", "site/**", "media/**", "docs/images/**"]
+    rule: In a customer-facing deck, leave out anything the repo marks as internal, such as supplier listings.
+    optional: true
+    when_missing: omit
+    max_bullets: 8

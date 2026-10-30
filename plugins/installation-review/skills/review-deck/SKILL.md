@@ -1,13 +1,13 @@
 ---
 name: review-deck
-description: Build a project review slide deck for a robot installation or deployment project by reading the project's GitHub repo and filling a fixed review template. Every point is extracted from the repo and traced to its source, and the user is asked only for the slots the repo cannot fill. Use this whenever someone wants a project review, installation review, deployment status deck, milestone or progress review, "review slides for <project>", or asks to summarise a project repo into slides for a meeting, even if they don't mention a template.
+description: Build a project review slide deck for a robot installation or deployment project by reading the project's GitHub repo and filling a fixed review template. Every point is extracted from the repo and traced to its source, and the user is asked only for the slots the repo cannot fill. Use this whenever someone wants a project review, installation review, deployment status deck, milestone or progress review, concept or feasibility review before quoting, "review slides for <project>", or asks to summarise a project repo into slides for a meeting, even if they don't mention a template.
 ---
 
 # Installation review deck
 
 Turn an installation project repo into a review deck with a fixed structure. Three things decide what ends up in the deck, and they never swap roles:
 
-- **The template** decides which slides exist and in what order (`templates/installation-review.yaml`).
+- **The template** decides which slides exist and in what order (a file in `templates/`, chosen under Inputs).
 - **The repo** decides what goes on them.
 - **The user** fills only what the repo can't, and confirms judgments such as overall status.
 
@@ -29,7 +29,7 @@ This skill extracts and condenses. It does not author. A review deck is used as 
 | Review date | Today | — |
 | Review period start | Date of the previous review: the newest `reviews/<YYYY-MM-DD>/` folder or `review/<YYYY-MM-DD>` git tag | Ask (part of the batch, not a separate question) |
 | Review number | Previous review number + 1 | Ask |
-| Template | `templates/installation-review.yaml` in this skill, unless `project.yaml` sets `review_template:` to another file in `templates/` | — |
+| Template | `templates/installation-review.yaml` in this skill, unless `project.yaml` sets `review_template:` to another file in `templates/`, or the user asks for a concept, feasibility or pre-quote review (`templates/concept-review.yaml`) | If the project has no contract yet and the request doesn't say which, ask before scanning |
 
 The project repo may contain a `project.yaml` with metadata and `sources:` overrides. Read it first if it exists. `references/repo-conventions.md` describes the layout this skill expects and works best with.
 
@@ -81,7 +81,7 @@ Fill each slide following `references/slide-rules.md`. In short: assertion headl
 
 1. Write `deck.md` and `coverage.md` to `reviews/<review date>/` in the project repo. If the folder already exists, stop and ask; don't overwrite.
 2. Run the structural check from the skill directory:
-   `python scripts/check_deck.py <repo>/reviews/<date>/deck.md --template templates/installation-review.yaml`
+   `python scripts/check_deck.py <repo>/reviews/<date>/deck.md --template templates/<template>.yaml`
    It checks slide order, ids, headlines, statuses, bullet limits and that every content line has a source tag. Fix every error and re-run until it passes.
 3. If the `deck-validator` subagent is available, run it for the semantic check: does each source actually support its claim? Fix what it flags.
 4. Report back briefly: the output path, coverage per slide (found / partial / TBD), and the open TBD items.
@@ -92,7 +92,8 @@ Fill each slide following `references/slide-rules.md`. In short: assertion headl
 
 ## Reference files
 
-- `templates/installation-review.yaml`: the fixed structure. Read in Step 1.
+- `templates/installation-review.yaml`: the fixed structure for a review during installation. Read in Step 1.
+- `templates/concept-review.yaml`: the fixed structure for a concept review before quoting. Read in Step 1 instead when chosen.
 - `references/slide-rules.md`: how to write headlines, bullets and tables. Read in Step 5.
 - `references/output-formats.md`: `deck.md` and `coverage.md` formats, and the source tag syntax. Read before writing either file.
 - `references/repo-conventions.md`: the project repo layout this skill expects. Read when a scan finds little, to tell the user what to add.
