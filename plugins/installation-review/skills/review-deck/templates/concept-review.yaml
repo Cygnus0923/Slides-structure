@@ -6,7 +6,7 @@
 # each key means. Change the structure here, then bump `version`.
 
 template: concept-review
-version: 1
+version: 2
 
 deck_title: "{project} — Concept review #{review_no}"
 
@@ -65,8 +65,11 @@ slides:
     sources:
       files: ["customer/**", "docs/brief*", "docs/requirements*", README.md, project.yaml]
     keywords: [requirement, brief, must, shall, deliverable, scope]
-    rule: Quote the customer's numbers as written. A site measurement that disagrees goes on the same line with its own source.
-    max_bullets: 8
+    rule: >-
+      Quote the customer's numbers as written. A site measurement that disagrees goes
+      on the same line with its own source. If the brief has more items than fit, group
+      related ones on one line and cite every item number; never move a requirement to the notes.
+    max_bullets: 12
 
   - id: S04
     name: What changed
@@ -123,10 +126,11 @@ slides:
       github: ["open issues labelled feasibility"]
     keywords: [feasible, verdict, achievable, risk, cannot, depends]
     rule: >-
-      Every requirement in S03 gets one row, in the same order. Verdict is one of
+      Every requirement in S03 gets one row, in the same order; a grouped S03 line
+      may stay one row only if its items share a verdict. Verdict is one of
       OK, Work to price, Settle with customer, Not feasible. A verdict is an
       engineering judgment: take it from a source or ask the user. Never assign one.
-    max_bullets: 12
+    max_bullets: 15
 
   - id: S09
     name: Tight constraints

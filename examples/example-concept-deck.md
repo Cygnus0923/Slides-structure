@@ -1,5 +1,5 @@
 # Example rack scanning — Concept review #2
-review_date: 2026-10-30 · period: 2026-10-02 → 2026-10-30 · template: concept-review v1
+review_date: 2026-10-30 · period: 2026-10-02 → 2026-10-30 · template: concept-review v2
 
 <!-- Fictional example for format reference. Not a real project. -->
 
