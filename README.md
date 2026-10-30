@@ -27,7 +27,7 @@ Output goes to `reviews/<YYYY-MM-DD>/deck.md` and `coverage.md` in the project r
 
 ## The templates
 
-Two review types, one YAML each. The skill uses the installation review unless the project's `project.yaml` sets `review_template:`, or you ask for a concept or feasibility review.
+Three deck types, one YAML each. The skill uses the installation review unless the project's `project.yaml` sets `review_template:`, or you ask for a concept review or an engineering assessment.
 
 ### Installation review (default)
 
@@ -68,6 +68,21 @@ For a project before contract: can we quote it, and what must the customer accep
 | S13 | Decisions needed | Issues labelled `decision-needed`, `docs/decisions.md` |
 | S14 | Next steps | Plan, assigned open issues |
 | S15 | Appendix (optional) | Drawings, renders, site photos |
+
+### Engineering assessment
+
+For engineering's answer to one customer document, such as an email with new terms: what to agree to now and what to price separately. Give the skill that document as the trigger document.
+
+| # | Slide | Filled from |
+|---|---|---|
+| S01 | Title | `project.yaml`, README, the trigger document |
+| S02 | Design concept | Concept and design docs, with the principles behind them |
+| S03 | What changed in the ask | Earlier customer documents and the trigger document, quoted word for word |
+| S04 | Bottom line | Derived from S03 and S05–S08; recommendation confirmed by you |
+| S05 | Sharpest issue (optional) | The trigger-document item with the widest gap, options side by side |
+| S06 | Risks if we accept the terms | The trigger document, `docs/risks.md`, feasibility and quote docs |
+| S07 | Technical risks | `docs/risks.md`, design and test docs |
+| S08 | Item-by-item answer | One row per trigger-document item: this contract or priced separately |
 
 To change the structure, edit the YAML. See [AGENTS.md](AGENTS.md) for the rules.
 
