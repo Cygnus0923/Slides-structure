@@ -1,8 +1,8 @@
 {
-  "name": "weston-robot-review",
-  "description": "Review and reporting tools for Weston Robot installation projects",
+  "name": "installation-review-tools",
+  "description": "Review and reporting tools for robot installation projects",
   "owner": {
-    "name": "Weston Robot"
+    "name": "Cygnus0923"
   },
   "plugins": [
     {

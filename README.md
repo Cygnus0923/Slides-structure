@@ -48,8 +48,8 @@ To change the structure, edit the YAML. See [AGENTS.md](AGENTS.md) for the rules
 In Claude Code:
 
 ```
-/plugin marketplace add https://github.com/<org>/<this-repo>
-/plugin install installation-review@weston-robot-review
+/plugin marketplace add https://github.com/Cygnus0923/Slides-structure
+/plugin install installation-review@installation-review-tools
 ```
 
 For a private repo, the machine needs GitHub access to it (for example via `gh auth login`).
