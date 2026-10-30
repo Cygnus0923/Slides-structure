@@ -64,6 +64,10 @@ Before contract, the concept review template reads these instead of a plan and t
 
 Write feasibility verdicts down in the repo. The skill never assigns one, so without that file every verdict goes into the question batch.
 
+## Customer documents
+
+Save each customer document in `customer/` with a dated name, such as `customer/2026-11-18-email.pdf`, and keep its own item numbering. The engineering assessment compares the newest one (the trigger document) against the earlier ones, and quotes both by item number.
+
 ## Review anchors
 
 Each review is saved in `reviews/YYYY-MM-DD/`. Optionally tag the commit as `review/YYYY-MM-DD`. The next review uses the newest of these as its period start, so the "work completed" slide covers exactly the time since the last review.

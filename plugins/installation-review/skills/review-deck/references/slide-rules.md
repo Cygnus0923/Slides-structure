@@ -42,12 +42,16 @@ When several sources support one line, list the strongest one or two, not all of
 
 Notes are optional. Use them for context the presenter should say but the slide shouldn't show: the reason behind a slip, detail behind a summary number, or which sources were stale and confirmed by the user.
 
-## Executive summary (S02)
+## Summary slide (`when_missing: derive`)
 
-Write it last. It contains:
+Write it last: the executive summary in the review templates, the bottom line in the engineering assessment. Include what the template's fields ask for:
 
-1. Overall status (Green / Amber / Red) with one line stating which part of the status rule applied.
-2. Up to three key messages, each an assertion taken from a filled slide, tagged with that slide's id.
-3. The top ask, taken from the slide the template's `top_ask` field names. If that slide has nothing, write "No decisions requested this review".
+1. Overall status (Green / Amber / Red), when the template has a `status_rule`, with one line stating which part of the rule applied.
+2. Up to three key messages, or the conclusion and its supporting points, each an assertion taken from a filled slide, tagged with that slide's id.
+3. The top ask or the recommendation, taken from the slide the template names. If that slide has nothing, write "No decisions requested this review".
 
 Don't introduce anything here that isn't already on another slide.
+
+## Judgment slides (`judgment: true`)
+
+Write the confirmed version only. Put the reasoning and its sources in the speaker notes, and say what the judgment assumes. When the user changed your draft, the line is tagged `[src: user, <date>]` alongside the evidence.

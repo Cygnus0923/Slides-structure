@@ -1,0 +1,138 @@
+# Engineering assessment — fixed slide template
+#
+# For a response to one customer document (the trigger document: an email,
+# revised requirements, contract terms). Engineering's input to the person who
+# decides what to agree to. Same keys as installation-review.yaml; see that file
+# for what each key means. Change the structure here, then bump `version`.
+#
+# Extra key in this template
+#   judgment   true = the slide's verdicts are engineering judgments. Draft them
+#              from the sources, show the reasoning, and have the user confirm
+#              them in the question batch. Never present an unconfirmed one.
+
+template: engineering-assessment
+version: 1
+
+deck_title: "{project} — Engineering assessment"
+
+defaults:
+  max_bullets: 6
+  when_missing: ask
+  fresh: false
+
+skip:
+  - .git/**
+  - node_modules/**
+  - build/**
+  - "**/*.bag"
+  - "**/*.mcap"
+  - "**/*.pcd"
+  - "**/*.stl"
+  - "**/*.step"
+  - "**/*.stp"
+  - "**/*.dae"
+  - "**/*.zip"
+
+slides:
+  - id: S01
+    name: Title
+    layout: title
+    purpose: Say which decision this deck informs, which customer document it answers, and who it is for.
+    fields: [project, customer, decision_informed, trigger_document, review_date, audience, presenter]
+    sources:
+      files: [project.yaml, README.md]
+    keywords: [customer, project]
+    rule: Audience is internal or customer-facing. In a customer-facing deck, nothing the repo marks as internal goes on any slide.
+
+  - id: S02
+    name: Design concept
+    layout: two-column
+    purpose: The current design, and the principles that shaped it.
+    fields:
+      - "each unit: what it is and what it does"
+      - "design principles behind the concept, each with the reason for it"
+    sources:
+      files: ["docs/concept*", "docs/design*", README.md]
+    keywords: [concept, design, principle, bought-in, reuse, unit]
+    rule: Take principles from the repo or the user. Don't infer a principle from the design.
+
+  - id: S03
+    name: What changed in the ask
+    layout: table
+    purpose: How the trigger document differs from what the customer asked for before, topic by topic.
+    columns: [Topic, Earlier document, Trigger document]
+    sources:
+      files: ["customer/**", "docs/brief*", "docs/requirements*"]
+    keywords: [requirement, scope, brief, must, shall, agreed]
+    rule: >-
+      Quote the customer word for word, in quotation marks, with document and item
+      number in the source tag. One row per topic where the two differ. Put items with
+      no earlier counterpart in a last row named "New in the trigger document".
+    max_bullets: 8
+
+  - id: S04
+    name: Bottom line
+    layout: summary
+    purpose: The conclusion and the recommendation, before the evidence.
+    fields:
+      - "conclusion: one assertion the rest of the deck supports"
+      - "up to 4 supporting points, each drawn from S03 or S05–S08"
+      - "recommendation: what to agree to now and what to defer (from S08)"
+      - "definitions of the key terms the recommendation depends on, in the notes"
+    when_missing: derive
+    judgment: true
+    rule: Add nothing that isn't on another slide. Say plainly what the recommendation assumes.
+
+  - id: S05
+    name: Sharpest issue
+    layout: table
+    purpose: The single trigger-document item with the widest gap between what is asked and what can be delivered, with the options side by side.
+    columns: [Criterion, Option A, Option B]
+    fields:
+      - "rows: what we deliver · who makes the decision · what it needs · risk to us · where it was asked"
+      - "recommended position, as one bullet after the table"
+    sources:
+      files: ["customer/**", "docs/feasibility*", "docs/decisions*", README.md]
+    keywords: [option, scope, deliver, decision, responsibility]
+    judgment: true
+    rule: Propose which item is sharpest and why, and confirm it in the question batch. Leave the slide out if the user says no single item stands out.
+    optional: true
+    when_missing: omit
+    max_bullets: 7
+
+  - id: S06
+    name: Risks if we accept the terms
+    layout: table
+    purpose: What the trigger document's terms would commit us to that we cannot yet deliver or price.
+    columns: [Risk, Why it is a risk, If we sign it as written]
+    sources:
+      files: ["customer/**", docs/risks.md, "docs/feasibility*", "docs/quote*", README.md]
+      github: ["open issues labelled risk"]
+    keywords: [risk, binding, penalty, warranty, handover, performance, shortfall]
+    judgment: true
+    rule: Each row cites the trigger-document items it comes from. The last column is a consequence, not a mitigation.
+
+  - id: S07
+    name: Technical risks
+    layout: table
+    purpose: Risks in the design itself that stay whatever is signed, and what retires each one.
+    columns: [Risk, Why it is a risk, What retires it]
+    sources:
+      files: [docs/risks.md, "docs/design*", "docs/test*/**", README.md]
+      github: ["open issues labelled risk"]
+    keywords: [risk, untested, unknown, trial, sample, prototype]
+    rule: Every row names the test, trial or decision that retires it. Say plainly what has not been tested on hardware.
+
+  - id: S08
+    name: Item-by-item answer
+    layout: table
+    purpose: An answer to every item in the trigger document, split between this contract and later work priced separately.
+    columns: [Item, This contract, Priced separately]
+    sources:
+      files: ["customer/**", "docs/quote*", "docs/plan*", README.md]
+    keywords: [item, scope, phase, stage, payment, support]
+    judgment: true
+    rule: >-
+      One row per item in the trigger document, in its order and numbering; skip none.
+      A cell may be empty only when the item belongs wholly to the other column.
+    max_bullets: 15

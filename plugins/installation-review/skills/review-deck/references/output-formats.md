@@ -14,8 +14,9 @@ A source tag goes at the end of every bullet and in the last cell of every table
 | Pull request / issue | `[src: PR #48]` · `[src: issue #52]` |
 | GitHub milestone | `[src: milestone "SAT"]` |
 | CI run | `[src: CI run 1182]` |
+| Item in a customer document | `[src: customer/2026-10-23-email.pdf item 6]` |
 | User answer | `[src: user, 2026-10-30]` |
-| Another slide (S02 only) | `[src: S04]` |
+| Another slide (summary slide only) | `[src: S04]` |
 
 Two sources: `[src: issue #52; docs/risks.md#L4]`.
 
