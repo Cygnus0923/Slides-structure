@@ -31,6 +31,7 @@ This skill extracts and condenses. It does not author. A review deck is used as 
 | Review number | Previous review number + 1 | Ask |
 | Template | `templates/installation-review.yaml` in this skill, unless `project.yaml` sets `review_template:` to another file in `templates/`, the user asks for a concept, feasibility or pre-quote review (`templates/concept-review.yaml`), or for an engineering assessment of a customer document (`templates/engineering-assessment.yaml`) | If the project has no contract yet and the request doesn't say which, ask before scanning |
 | Trigger document | Only for `engineering-assessment`: the customer document the deck answers (an email, revised requirements, contract terms) | Ask for its path or text before scanning. Cite its items as `[src: <document> item <n>]` |
+| Our last offer | Only for `engineering-assessment`: the quotation or proposal the trigger document replies to, usually in `customer/` or `docs/quote*` | Ask for it with the trigger document. If the user has none, any line that depends on its wording says so |
 
 The project repo may contain a `project.yaml` with metadata and `sources:` overrides. Read it first if it exists. `references/repo-conventions.md` describes the layout this skill expects and works best with.
 
@@ -52,7 +53,9 @@ If the `repo-scanner` subagent is available, delegate to it: pass the repo path,
 
 Reading "the entire repo" is the fallback, not the plan. The hints keep the context on what the deck needs.
 
-With a trigger document, read it before the repo and list its items in its own numbering. That list is the row set for any slide whose rule says "one row per item in the trigger document".
+With a trigger document, read it and our last offer before the repo, and list the trigger document's items in its own numbering. That list is the row set for any slide whose rule says "one row per item in the trigger document".
+
+Then read the pages the scanner lists as linked from `README.md` or `project.yaml` (a project wiki, for example), read-only, with whatever connected tool reaches them. The scanner can't reach them itself. Cite them by page title; list any you couldn't open as not reachable.
 
 ### Step 3 — Map evidence to slots
 
