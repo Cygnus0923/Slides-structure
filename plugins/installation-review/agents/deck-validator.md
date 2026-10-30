@@ -24,12 +24,13 @@ For every bullet and table row:
 For every slide:
 
 5. **Headline follows from the content.** The headline's claim is proven by the slide's own lines.
-6. **Template rules respected.** Every slide's `rule` in the template holds. For example, in the installation template S07 rows have an owner and ETA (or `TBD`); in the concept template every S08 verdict has a source; in the engineering assessment S08 has one row per trigger-document item, none skipped, and every quote in S03 matches the document word for word.
+6. **Template rules respected.** Every slide's `rule` in the template holds. For example, in the installation template S07 rows have an owner and ETA (or `TBD`); in the concept template every S08 verdict has a source; in the engineering assessment S08 covers every trigger-document item, every Trade or Hold has a path to yes, S06 lists only Demands, every exposure amount has a document or user source, and every quote in S03 matches the document word for word.
+6a. **Business reader** (engineering assessment). Flag as `warn` any risk that ends without money, time or a payment stage, vague phrases ("not fully understood", "cannot bound", "unpriced") without a `TBD` amount beside them, and internal labels left unexplained on a slide.
 
 For the summary slide (`when_missing: derive`):
 
 7. **Status rule applied correctly**, when the template has one. Re-derive Green / Amber / Red using the template's `status_rule` and the slides it refers to (S04 and S07 in the installation template, S08 in the concept template), and compare.
-8. **Nothing new.** Each key message appears on the slide it cites.
+8. **Nothing new.** Each key message appears on the slide it cites. Lines the template says come from the user (such as deal risk) carry a user tag.
 
 ## Output
 

@@ -31,6 +31,7 @@ For a slide that is `TBD` or has no change, say so plainly: "No scope change thi
 - One row per item. Put the source tag in the last cell.
 - Status cells use: Done, On track, At risk, Late, Blocked, unless the slide's `rule` gives its own values.
 - A cell the repo can't fill and the user skipped holds `TBD`.
+- Keep each cell to about 15 words. Move the detail to the speaker notes.
 
 ## Source tags
 
@@ -44,13 +45,22 @@ Notes are optional. Use them for context the presenter should say but the slide 
 
 ## Summary slide (`when_missing: derive`)
 
-Write it last: the executive summary in the review templates, the bottom line in the engineering assessment. Include what the template's fields ask for:
+Write it last: the executive summary in the review templates, the decision slide in the engineering assessment. Include what the template's fields ask for:
 
 1. Overall status (Green / Amber / Red), when the template has a `status_rule`, with one line stating which part of the rule applied.
-2. Up to three key messages, or the conclusion and its supporting points, each an assertion taken from a filled slide, tagged with that slide's id.
-3. The top ask or the recommendation, taken from the slide the template names. If that slide has nothing, write "No decisions requested this review".
+2. Up to three key messages, or the conclusion, each an assertion taken from a filled slide, tagged with that slide's id. A conclusion names the common cause behind the slides it summarises; a count ("six terms can't be agreed") is not a conclusion.
+3. The top ask or the decision asked, taken from the slide the template names. If that slide has nothing, write "No decisions requested this review".
 
-Don't introduce anything here that isn't already on another slide.
+Don't introduce anything here that isn't already on another slide, except lines the template's rule says come from the user (such as deal risk).
+
+## Writing for a business reader
+
+The engineering assessment is read by whoever signs. Write so they don't need to ask what a word means:
+
+- Every risk ends in money, time or a payment stage. If the amount isn't known, write `TBD` and say "exposure unknown"; don't write "not fully understood", "cannot bound" or "unpriced" on their own.
+- Spell out internal labels (revision names, test numbers, wiki page names) or move them to the notes.
+- An undefined term in a contested item ("cycle", "minor", "continuous", "handover") gets the definition we propose, and that definition becomes something we ask the customer to agree.
+- Say what the customer gets before what we decline. "Measured cycle times from every trial run" beats "No binding cycle time".
 
 ## Judgment slides (`judgment: true`)
 
