@@ -1,0 +1,171 @@
+# Engineering assessment — fixed slide template
+#
+# For a response to one customer document (the trigger document: an email,
+# revised requirements, contract terms). Engineering's case to the person who
+# decides what to sign, and the position they take back to the customer.
+# Same keys as installation-review.yaml; see that file for what each key means.
+# Change the structure here, then bump `version`.
+#
+# Extra key in this template
+#   judgment   true = the slide's verdicts are engineering judgments. Draft them
+#              from the sources, show the reasoning, and have the user confirm
+#              them in the question batch. Never present an unconfirmed one.
+#
+# Money and dates (contract value, LD rate and cap, deal risk) are never
+# estimated. They come from the trigger document, our last offer or the user;
+# otherwise they are TBD, and a TBD exposure reads "exposure unknown".
+
+template: engineering-assessment
+version: 1
+
+deck_title: "{project} — Engineering assessment"
+
+defaults:
+  max_bullets: 6
+  when_missing: ask
+  fresh: false
+
+skip:
+  - .git/**
+  - node_modules/**
+  - build/**
+  - "**/*.bag"
+  - "**/*.mcap"
+  - "**/*.pcd"
+  - "**/*.stl"
+  - "**/*.step"
+  - "**/*.stp"
+  - "**/*.dae"
+  - "**/*.zip"
+
+slides:
+  - id: S01
+    name: Title
+    layout: title
+    purpose: Which decision this informs, which customer document it answers, and the commercial facts the decision rests on.
+    fields:
+      - "decision_informed, trigger_document, our_last_offer, review_date, audience, presenter"
+      - "commercial facts: contract value · LD clause (rate and cap) · liability cap · payment stages tied to acceptance · decision needed by"
+      - "numbers we don't have: every commercial fact still TBD, on one line"
+    sources:
+      files: [project.yaml, README.md, "customer/**", "docs/quote*"]
+    keywords: [value, price, liquidated, damages, penalty, cap, liability, payment, stage, milestone]
+    rule: >-
+      Commercial facts come from the trigger document, our last offer or the user, never estimated.
+      In a customer-facing deck, nothing the repo marks as internal goes on any slide.
+    max_bullets: 10
+
+  - id: S02
+    name: Design concept
+    layout: two-column
+    purpose: The design principles that decide what we can promise, and the units they produced.
+    fields:
+      - "design principles, each with the reason for it"
+      - "each unit: what it is and what it does (move to notes if the slide is full)"
+    sources:
+      files: ["docs/concept*", "docs/design*", README.md]
+    keywords: [concept, design, principle, bought-in, reuse, unit]
+    rule: Take principles from the repo or the user. Don't infer a principle from the design.
+
+  - id: S03
+    name: What changed in the ask
+    layout: table
+    purpose: How the trigger document moves the ask from what was agreed before, so the common cause is visible.
+    columns: [Topic, Earlier document, Trigger document, Effect]
+    sources:
+      files: ["customer/**", "docs/brief*", "docs/requirements*", "docs/quote*"]
+    keywords: [requirement, scope, brief, must, shall, agreed, binding, handover]
+    rule: >-
+      Quote the shortest phrase that carries the change, word for word, with document and item
+      number in the source tag. Effect is one of: target → binding, excluded → in scope,
+      pilot → handover, question, new. Put items with no earlier counterpart in a last row named
+      "New in the trigger document".
+    max_bullets: 8
+
+  - id: S04
+    name: Decision
+    layout: summary
+    purpose: The decision asked of the reader, the options with their cost, and what we tell the customer.
+    columns: [Option, What we sign, Exposure, Deal risk, What the customer hears]
+    fields:
+      - "conclusion: the common cause behind the S06 rows, in one sentence; not a count"
+      - "options table, always these three rows: sign as written · sign with our counter-offers · hold the kickoff"
+      - "decision asked: one sentence, naming one option"
+      - "what we tell the customer: the conclusion in the customer's terms, one sentence"
+      - "decision needed by: date"
+      - "definitions of the key terms the decision depends on, in the notes"
+    when_missing: derive
+    judgment: true
+    rule: >-
+      Exposure comes from S06. Deal risk (delay, relationship, losing the deal) comes only from the
+      user. Apart from those user lines, add nothing that isn't on another slide.
+    max_bullets: 8
+
+  - id: S05
+    name: Sharpest issue
+    layout: table
+    purpose: The one contested term that most decides the outcome, with the options side by side.
+    columns: [Criterion, Option A, Option B]
+    fields:
+      - "rows: what the customer gets · who carries the risk · what it needs · exposure · where it was asked"
+      - "recommended position, as one bullet after the table, with its path to yes"
+    sources:
+      files: ["customer/**", "docs/feasibility*", "docs/decisions*", README.md]
+    keywords: [option, scope, deliver, decision, responsibility, accuracy]
+    judgment: true
+    rule: >-
+      In the question batch, offer two candidates: the biggest technical gap, and the biggest shift
+      in who carries the risk. Label each with the decision it drives. Leave the slide out if the
+      user says no single term stands out.
+    optional: true
+    when_missing: omit
+    max_bullets: 7
+
+  - id: S06
+    name: Exposure if we sign as written
+    layout: table
+    purpose: Which demands in the trigger document would cost us money or payments if signed unchanged, and how much.
+    columns: [Term, Why we'd miss it, What it triggers, Exposure]
+    sources:
+      files: ["customer/**", "docs/quote*", docs/risks.md, "docs/feasibility*", README.md]
+      github: ["open issues labelled risk"]
+    keywords: [binding, shortfall, liquidated, damages, penalty, warranty, handover, performance, free]
+    judgment: true
+    rule: >-
+      Only items whose Kind on S08 is Demand; questions and quote requests are answered on S08, not
+      listed here. A row may come from several terms together (for example, who runs the system
+      after handover); cite every item it rests on. What it triggers is one of: LD, payment
+      withheld (name the stage), unpriced work, rework. Exposure is an amount or cap from the
+      documents or the user, otherwise TBD. LD rows first.
+    max_bullets: 6
+
+  - id: S07
+    name: Evidence behind the gaps
+    layout: table
+    purpose: For each term on S06, what is asked against the best we have, and how solid that is.
+    columns: [Contested term, Asked, Best we have now, Basis, What closes it]
+    sources:
+      files: ["docs/test*/**", "tests/reports/**", "docs/design*", "docs/feasibility*", docs/risks.md, README.md]
+    keywords: [measured, tested, trial, sample, datasheet, estimate, untested]
+    rule: >-
+      Only terms on S06. Basis is one of: measured, vendor figure, estimate, untested. What closes
+      it names a test or decision and a date, or TBD. Design risks not tied to a term go in the notes.
+    max_bullets: 6
+
+  - id: S08
+    name: Counter-offer per item
+    layout: table
+    purpose: Our answer to every item in the trigger document, worded so the business team can send it.
+    columns: [Item, Kind, Our offer, Stance, Path to yes]
+    sources:
+      files: ["customer/**", "docs/quote*", "docs/plan*", README.md]
+    keywords: [item, scope, phase, stage, payment, support, definition]
+    judgment: true
+    rule: >-
+      Cover every item in the trigger document, in its numbering; items accepted as asked may share
+      one row that lists their numbers. Kind is one of: Demand, Question, Quote request. Our offer
+      says what the customer gets, starting with a verb, and could go to the customer unchanged.
+      Stance is one of: Give, Trade, Hold. Every Trade or Hold has a path to yes: the definition we
+      propose, where it is measured, when it becomes binding, and what we need from the customer.
+      Fallback positions come only from the user and go in the notes.
+    max_bullets: 12

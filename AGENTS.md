@@ -20,6 +20,7 @@ plugins/installation-review/
     └── scripts/check_deck.py           structural validator
 examples/example-deck.md                fictional installation review deck
 examples/example-concept-deck.md        fictional concept review deck
+examples/example-assessment-deck.md     fictional engineering assessment deck
 ```
 
 ## Roles when running a review
@@ -57,6 +58,9 @@ python plugins/installation-review/skills/review-deck/scripts/check_deck.py \
 python plugins/installation-review/skills/review-deck/scripts/check_deck.py \
   examples/example-concept-deck.md \
   --template plugins/installation-review/skills/review-deck/templates/concept-review.yaml
+python plugins/installation-review/skills/review-deck/scripts/check_deck.py \
+  examples/example-assessment-deck.md \
+  --template plugins/installation-review/skills/review-deck/templates/engineering-assessment.yaml
 ```
 
 - To try local changes without installing: `claude --plugin-dir ./plugins/installation-review`.

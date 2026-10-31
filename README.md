@@ -27,7 +27,7 @@ Output goes to `reviews/<YYYY-MM-DD>/deck.md` and `coverage.md` in the project r
 
 ## The templates
 
-Two review types, one YAML each. The skill uses the installation review unless the project's `project.yaml` sets `review_template:`, or you ask for a concept or feasibility review.
+Three deck types, one YAML each. The skill uses the installation review unless the project's `project.yaml` sets `review_template:`, or you ask for a concept review or an engineering assessment.
 
 ### Installation review (default)
 
@@ -68,6 +68,21 @@ For a project before contract: can we quote it, and what must the customer accep
 | S13 | Decisions needed | Issues labelled `decision-needed`, `docs/decisions.md` |
 | S14 | Next steps | Plan, assigned open issues |
 | S15 | Appendix (optional) | Drawings, renders, site photos |
+
+### Engineering assessment
+
+For engineering's case to whoever signs, when a customer document (an email with new terms, for example) asks for more than was offered: what signing would cost, and a counter-offer the business team can take back. Give the skill that document as the trigger document, and our last quotation with it.
+
+| # | Slide | Filled from |
+|---|---|---|
+| S01 | Title | The trigger document, our last offer, and you: contract value, LD terms, payment stages, decision date |
+| S02 | Design concept | Concept and design docs: the principles first, then the units |
+| S03 | What changed in the ask | Earlier documents against the trigger document, quoted word for word, with the effect of each change |
+| S04 | Decision | Derived from S03, S06 and S08: three options with exposure and deal risk, the decision asked, the line for the customer |
+| S05 | Sharpest issue (optional) | The contested term that most decides the outcome, options side by side |
+| S06 | Exposure if we sign as written | The customer's demands that would trigger LD, withheld payment or unpriced work, with amounts or `TBD` |
+| S07 | Evidence behind the gaps | What each contested term asks against the best we have, and whether that's measured, a vendor figure, an estimate or untested |
+| S08 | Counter-offer per item | Every trigger-document item: our offer, give / trade / hold, and the path to yes |
 
 To change the structure, edit the YAML. See [AGENTS.md](AGENTS.md) for the rules.
 

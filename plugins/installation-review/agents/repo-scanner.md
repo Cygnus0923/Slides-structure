@@ -44,4 +44,4 @@ not_reachable: []
 
 Coverage is `stale` when the slot is `fresh: true` and `newest_source_date` is before the review period start. Report `missing_fields` for any template field or column that no source covers (for example, a blocker with no assignee means `Owner` is missing for that row).
 
-End with a short list of every source you could not reach and why.
+End with a short list of every source you could not reach and why, then a `linked_pages` list: every link in `README.md` and `project.yaml` to a page outside the repo, with its link text. Don't open them; the main agent reads them with its own tools.

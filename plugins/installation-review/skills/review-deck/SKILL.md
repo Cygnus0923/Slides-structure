@@ -1,6 +1,6 @@
 ---
 name: review-deck
-description: Build a project review slide deck for a robot installation or deployment project by reading the project's GitHub repo and filling a fixed review template. Every point is extracted from the repo and traced to its source, and the user is asked only for the slots the repo cannot fill. Use this whenever someone wants a project review, installation review, deployment status deck, milestone or progress review, concept or feasibility review before quoting, "review slides for <project>", or asks to summarise a project repo into slides for a meeting, even if they don't mention a template.
+description: Build a project review slide deck for a robot installation or deployment project by reading the project's GitHub repo and filling a fixed review template. Every point is extracted from the repo and traced to its source, and the user is asked only for the slots the repo cannot fill. Use this whenever someone wants a project review, installation review, deployment status deck, milestone or progress review, concept or feasibility review before quoting, engineering assessment of a customer email or revised requirements, "review slides for <project>", or asks to summarise a project repo into slides for a meeting, even if they don't mention a template.
 ---
 
 # Installation review deck
@@ -18,7 +18,7 @@ This skill extracts and condenses. It does not author. A review deck is used as 
 1. **The structure is fixed.** Use every slide in the template, in order, with the template's ids and names. Never add, merge, split or rename slides. An `optional: true` slide may be left out only when it has no content.
 2. **Extract, don't invent.** Every bullet, table row, number, date and owner comes from a repo source or from the user's answer, and carries a source tag (format below). If you can't point at a source, it doesn't go on the slide.
 3. **Ask once.** Collect every gap and every judgment that needs confirming, then ask in a single batch. Don't stop at each slide.
-4. **Judgments are proposals.** Overall status, headlines and the executive summary are derived by you. Show the reasoning and let the user confirm or change them in the same batch.
+4. **Judgments are proposals.** Overall status, headlines, the summary slide and any slide marked `judgment: true` (a recommendation, a consequence, a preferred option) are drafted by you. Show the reasoning and let the user confirm or change them in the same batch.
 5. **Never overwrite a past review.** Each review is written to its own dated folder.
 
 ## Inputs
@@ -29,7 +29,9 @@ This skill extracts and condenses. It does not author. A review deck is used as 
 | Review date | Today | — |
 | Review period start | Date of the previous review: the newest `reviews/<YYYY-MM-DD>/` folder or `review/<YYYY-MM-DD>` git tag | Ask (part of the batch, not a separate question) |
 | Review number | Previous review number + 1 | Ask |
-| Template | `templates/installation-review.yaml` in this skill, unless `project.yaml` sets `review_template:` to another file in `templates/`, or the user asks for a concept, feasibility or pre-quote review (`templates/concept-review.yaml`) | If the project has no contract yet and the request doesn't say which, ask before scanning |
+| Template | `templates/installation-review.yaml` in this skill, unless `project.yaml` sets `review_template:` to another file in `templates/`, the user asks for a concept, feasibility or pre-quote review (`templates/concept-review.yaml`), or for an engineering assessment of a customer document (`templates/engineering-assessment.yaml`) | If the project has no contract yet and the request doesn't say which, ask before scanning |
+| Trigger document | Only for `engineering-assessment`: the customer document the deck answers (an email, revised requirements, contract terms) | Ask for its path or text before scanning. Cite its items as `[src: <document> item <n>]` |
+| Our last offer | Only for `engineering-assessment`: the quotation or proposal the trigger document replies to, usually in `customer/` or `docs/quote*` | Ask for it with the trigger document. If the user has none, any line that depends on its wording says so |
 
 The project repo may contain a `project.yaml` with metadata and `sources:` overrides. Read it first if it exists. `references/repo-conventions.md` describes the layout this skill expects and works best with.
 
@@ -51,6 +53,10 @@ If the `repo-scanner` subagent is available, delegate to it: pass the repo path,
 
 Reading "the entire repo" is the fallback, not the plan. The hints keep the context on what the deck needs.
 
+With a trigger document, read it and our last offer before the repo, and list the trigger document's items in its own numbering. That list is the row set for any slide whose rule says "one row per item in the trigger document".
+
+Then read the pages the scanner lists as linked from `README.md` or `project.yaml` (a project wiki, for example), read-only, with whatever connected tool reaches them. The scanner can't reach them itself. Cite them by page title; list any you couldn't open as not reachable.
+
 ### Step 3 — Map evidence to slots
 
 Give every slide a coverage status:
@@ -60,14 +66,14 @@ Give every slide a coverage status:
 - **missing**: nothing found.
 - **stale**: for `fresh: true` slides, the newest source predates the review period start. The content may still be right, but it needs the user's confirmation.
 
-Write the coverage report in the format in `references/output-formats.md`. Executive summary (S02) is `derive`: leave it until Step 5.
+Write the coverage report in the format in `references/output-formats.md`. Slides marked `when_missing: derive` (the executive summary or bottom line) wait until Step 5.
 
 ### Step 4 — Ask for gaps in one batch
 
 Build one message that covers, slide by slide:
 
 - each missing, partial or stale item: what is needed, and where you looked;
-- each proposed judgment to confirm: overall status with the rule that produced it, and the three key messages.
+- each proposed judgment to confirm: overall status with the rule that produced it, the key messages, and every draft on a `judgment: true` slide with the sources behind it.
 
 Keep each question short and answerable. Use a structured question tool if the environment has one. If the user skips an item, mark it `TBD` on the slide. Don't fill it with a guess.
 
@@ -75,7 +81,7 @@ Tag the user's answers as `[src: user, <review date>]`. After the review, sugges
 
 ### Step 5 — Condense
 
-Fill each slide following `references/slide-rules.md`. In short: assertion headlines, one fact per bullet, numbers and dates over adjectives, named owners, within `max_bullets`. Keep what is decision-relevant; put supporting detail in the speaker notes or the appendix. Write S02 last, from the filled slides only, citing the slide each message comes from (for example `[src: S04]`).
+Fill each slide following `references/slide-rules.md`. In short: assertion headlines, one fact per bullet, numbers and dates over adjectives, named owners, within `max_bullets`. Keep what is decision-relevant; put supporting detail in the speaker notes or the appendix. Write the `derive` slide last, from the filled slides only, citing the slide each message comes from (for example `[src: S04]`).
 
 ### Step 6 — Validate and write
 
@@ -94,6 +100,7 @@ Fill each slide following `references/slide-rules.md`. In short: assertion headl
 
 - `templates/installation-review.yaml`: the fixed structure for a review during installation. Read in Step 1.
 - `templates/concept-review.yaml`: the fixed structure for a concept review before quoting. Read in Step 1 instead when chosen.
+- `templates/engineering-assessment.yaml`: the fixed structure for engineering's answer to a customer document. Read in Step 1 instead when chosen.
 - `references/slide-rules.md`: how to write headlines, bullets and tables. Read in Step 5.
 - `references/output-formats.md`: `deck.md` and `coverage.md` formats, and the source tag syntax. Read before writing either file.
 - `references/repo-conventions.md`: the project repo layout this skill expects. Read when a scan finds little, to tell the user what to add.
